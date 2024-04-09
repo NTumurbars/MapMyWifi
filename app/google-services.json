@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "323555855404",
+    "project_id": "accesspointdb",
+    "storage_bucket": "accesspointdb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323555855404:android:1e40e5b94c18d9e78cd589",
+        "android_client_info": {
+          "package_name": "com.example.finalproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsMXpleJmDSD3hVztHdhmEHjCK7-DTWp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:323555855404:android:c6a93126fa4d91688cd589",
+        "android_client_info": {
+          "package_name": "com.example.mapmywifi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsMXpleJmDSD3hVztHdhmEHjCK7-DTWp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
