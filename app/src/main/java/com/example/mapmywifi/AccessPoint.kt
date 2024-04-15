@@ -7,7 +7,7 @@ data class AccessPointType(
     val range: Int,
     val rentalCost: Int,
     val purchaseCost: Int,
-    val imageRes: String
+    val imageUrl: String
 )
 
 data class AccessPointInstance(
@@ -28,7 +28,4 @@ data class ProposalOption(
 data class ProposalSummary(
     val proposalOptions: List<ProposalOption>,
     val visitationFee: Int
-) {
-    val totalRentalCost: Int get() = proposalOptions.sumOf { it.rentalTotalCost }
-    val totalPurchaseCost: Int get() = proposalOptions.sumOf { it.purchaseTotalCost }
-}
+)

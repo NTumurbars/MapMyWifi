@@ -1,32 +1,44 @@
 package com.example.mapmywifi
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
 object AccessPointTypes {
 
-    suspend fun fetchAccessPointTypes(): List<AccessPointType>? {
-        val db = FirebaseFirestore.getInstance()
-        val storage = FirebaseStorage.getInstance()
-        val types = mutableListOf<AccessPointType>()
+    private const val TAG = "AccessPointTypes"
 
-        try {
-            val result = db.collection("AccessPointTypes").get().await()
-            for (document in result.documents) {
-                val name = document.getString("name") ?: "Unnamed"
-                val range = document.getLong("range")?.toInt() ?: 0
-                val rentalCost = document.getLong("rentalCost")?.toInt() ?: 0
-                val purchaseCost = document.getLong("purchaseCost")?.toInt() ?: 0
-                val imageRes = document.getString("imageRes") ?: ""
+    suspend fun fetchAccessPointTypes(): List<AccessPointType> {
+        val firestoreDb = FirebaseFirestore.getInstance()
+        val firebaseStorage = FirebaseStorage.getInstance()
 
-                val imageUrl = storage.getReferenceFromUrl(imageRes).downloadUrl.await().toString()
-                types.add(AccessPointType(name, range, rentalCost, purchaseCost, imageUrl))
+        return try {
+            firestoreDb.collection("AccessPointTypes").get().await().documents.mapNotNull { document ->
+                val name = document.getString("name")
+                val range = document.getLong("range")?.toInt()
+                val rentalCost = document.getLong("rentalCost")?.toInt()
+                val purchaseCost = document.getLong("purchaseCost")?.toInt()
+                val imageRes = document.getString("imageRes")
+
+                if (name == null || range == null || rentalCost == null || purchaseCost == null || imageRes == null) {
+                    Log.d(TAG, "Null fields skipping this thing (It is here just to prevent some stupid things): $document")
+                    return@mapNotNull null
+                }
+
+                try {
+                    val imageUrl = firebaseStorage.getReference(imageRes).downloadUrl.await().toString()
+                    val accessPointType = AccessPointType(name, range, rentalCost, purchaseCost, imageUrl)
+                    Log.d(TAG, "Successfully created: $accessPointType")
+                    accessPointType
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to fetch imageUrl for document: $document", e)
+                    null
+                }
             }
-            return types
         } catch (e: Exception) {
-            e.printStackTrace()
-            return null
+            Log.e(TAG, "Failed to fetch access point types", e)
+            emptyList()
         }
     }
 }
